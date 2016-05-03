@@ -41,9 +41,12 @@ env["upload_file"] = "/my-file-backup.tar.gz" # Name file upload and save to dro
 def zip_code():
     with cd(env["code_dir"]):
         if exists(env["folder_name"], use_sudo=True):
-            env["zip_complete"] = True
             cmd = "tar -cvf {0} {1}".format(env["local_file"], env["folder_name"])
-            run(cmd)
+            result = run(cmd)
+            if result.return_code == 0:
+                env["zip_complete"] = True
+            else:
+                sys.exit(result) # print error
         else:
             sys.exit("Not found folder images!")
 
