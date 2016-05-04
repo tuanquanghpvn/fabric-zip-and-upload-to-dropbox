@@ -13,8 +13,9 @@ import dropbox
 #####################################################################################################
 
 # Info SSH
-env.hosts = ['truong.tuan.quang@127.0.0.1:22']
-env.passwords = {'truong.tuan.quang@127.0.0.1:22': 'your-password-here'}
+env.hosts = ["root@127.0.0.1:22", "truong.tuan.quang@127.0.0.1:22"]
+env.key_filename = ["~/.ssh/127.0.0.1.pem", "~/.ssh/id_rsa.pem"]
+# env.passwords = {'truong.tuan.quang@127.0.0.1:22': 'your-password-here'}
 
 # Config dropbox api
 # Add OAuth2 access token here. 
@@ -37,7 +38,12 @@ env["upload_file"] = "/my-file-backup.tar.gz" # Name file upload and save to dro
 #####################################################################################################
 #####################################################################################################
 #####################################################################################################
+
 # Function fabric
+
+def test():
+    run("uname -s")
+
 def zip_code():
     with cd(env["code_dir"]):
         if exists(env["folder_name"], use_sudo=True):
