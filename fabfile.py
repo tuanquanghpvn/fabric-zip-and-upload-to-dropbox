@@ -13,8 +13,8 @@ import dropbox
 #####################################################################################################
 
 # Info SSH
-env.hosts = ["root@127.0.0.1:22", "truong.tuan.quang@127.0.0.1:22"]
-env.key_filename = ["~/.ssh/127.0.0.1.pem", "~/.ssh/id_rsa.pem"]
+env.hosts = ["truong.tuan.quang@127.0.0.1"]
+env.key_filename = ["~/.ssh/id_rsa.pem"]
 # env.passwords = {'truong.tuan.quang@127.0.0.1:22': 'your-password-here'}
 
 # Config dropbox api
@@ -24,7 +24,6 @@ env.key_filename = ["~/.ssh/127.0.0.1.pem", "~/.ssh/id_rsa.pem"]
 env["token"] = "your-token-here"
 
 # Config Task
-env["zip_complete"] = False # If you don't want zip folder, only upload file exist, Set variable = True and run task upload_to_dropbox
 env["code_dir"] = "Documents/Python" # Root folder
 
 # Config zip folder or file
@@ -50,7 +49,7 @@ def zip_code():
             cmd = "tar -cvf {0} {1}".format(env["local_file"], env["folder_name"])
             result = run(cmd)
             if result.return_code == 0:
-                env["zip_complete"] = True
+                print "Zip complete!"
             else:
                 sys.exit(result) # print error
         else:
@@ -58,11 +57,11 @@ def zip_code():
 
 
 def upload_to_dropbox():
-    if env["zip_complete"]:
-        with cd(env["code_dir"]):
+    with cd(env["code_dir"]):
+        if exists(env["local_file"], use_sudo=True):
             _dropbox_api()
-    else:
-        sys.exit("You can't zip folder!. If you don't want zip folder. Set zip_complete = True")
+        else:
+            sys.exit("Not found file name {0}".format(env["local_file"]))
 
 
 #####################################################################################################
